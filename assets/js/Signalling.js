@@ -1,22 +1,32 @@
-'use strict'
+'use strict';
+
+// Strict mode'u etkinleştir. Bu daha sıkı JavaScript kodu yazmanıza yardımcı olur.
+
 Pusher.logToConsole = true;
-let channelName, pusher, base = "chleax.vercel.app";
-// let channelName, pusher, base = "https://sharenetic.herokuapp.com";
-// let channelName, pusher, base = "http://127.0.0.1:3000";
+
+// Pusher kütüphanesinin konsola log yazmasını etkinleştirir.
+
+let channelName, pusher, base = "";
+
+// Değişkenleri tanımla: channelName (kanal adı), pusher (Pusher nesnesi), base (temel URL)
+
 fetch(base + "/connect" + (localStorage.id ? `?id=${localStorage.id}` : ""), {
     "method": "GET",
     "headers": {
-        //   "cache-control": "no-cache",
+        // "cache-control": "no-cache",
         "Content-Type": "application/x-www-form-urlencoded"
     }
 })
     .then(function (response) {
+        // Sunucu yanıtını kontrol etmek için promise zinciri kullanılıyor.
         console.log(response.status);
         return response.json();
     }).then(function (data) {
+        // Sunucudan dönen veriyi işlemek için promise zinciri kullanılıyor.
         if (!localStorage.id || localStorage.id != data.id){
             localStorage.id = data.id;
-            updateTooltip();}
+            updateTooltip();
+        }
         channelName = data.channel;
         pusher = new Pusher('bda3528a8cfdae5663b2', {
             cluster: 'ap2'
@@ -24,16 +34,20 @@ fetch(base + "/connect" + (localStorage.id ? `?id=${localStorage.id}` : ""), {
         subscribe();
     })
     .catch(function (error) {
+        // Herhangi bir hata durumunda yakalanan hata.
         console.log(error.message);
     });
 
 function subscribe() {
+    // Pusher kanalına abone olma fonksiyonu
     window.channel = pusher.subscribe(channelName);
     window.channel.bind('pusher:subscription_succeeded', () => { console.log("subscribed") });
     window.channel.bind('pusher:subscription_error', () => { setTimeout(subscribe, 1000); });
     window.channel.bind('message', (mes) => signallingOnMessage(mes));
 }
+
 async function signal(mes) {
+    // Sunucuya sinyal gönderme fonksiyonu
     return await fetch(base + "/connect", {
         "method": "POST",
         "headers": {
@@ -42,8 +56,10 @@ async function signal(mes) {
         "body": JSON.stringify({ "id": mes.id, "message": mes })
     });
 }
+
 // Remove in production start
 function signallingDisconnect() {
+    // Üretimde kaldırılmalı: Bağlantıyı kapatma işlemi
     fetch(base + "/disconnect?id=" + localStorage.id, {
         method: "GET",
         headers: {
@@ -57,5 +73,7 @@ function signallingDisconnect() {
             console.log(error.message);
         });
 }
+
+// Tarayıcı penceresi kapatıldığında bağlantıyı kapatma işlemi
 window.addEventListener('beforeunload', signallingDisconnect);
 // Remove in production end
