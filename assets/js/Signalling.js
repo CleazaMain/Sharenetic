@@ -1,6 +1,6 @@
 'use strict'
 Pusher.logToConsole = true;
-let channelName, pusher, base = "https://sharenetic.vercel.app";
+let channelName, pusher, base = "chleax.vercel.app";
 // let channelName, pusher, base = "https://sharenetic.herokuapp.com";
 // let channelName, pusher, base = "http://127.0.0.1:3000";
 fetch(base + "/connect" + (localStorage.id ? `?id=${localStorage.id}` : ""), {
@@ -18,7 +18,7 @@ fetch(base + "/connect" + (localStorage.id ? `?id=${localStorage.id}` : ""), {
             localStorage.id = data.id;
             updateTooltip();}
         channelName = data.channel;
-        pusher = new Pusher('892a123070fc89c43124', {
+        pusher = new Pusher('bda3528a8cfdae5663b2', {
             cluster: 'ap2'
         });
         subscribe();
