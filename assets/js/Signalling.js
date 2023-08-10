@@ -6,7 +6,7 @@ Pusher.logToConsole = true;
 
 // Pusher kütüphanesinin konsola log yazmasını etkinleştirir.
 
-let channelName, pusher, base = "";
+let channelName, pusher, base = "https://cleazamain.github.io/Sharenetic/";
 
 // Değişkenleri tanımla: channelName (kanal adı), pusher (Pusher nesnesi), base (temel URL)
 
